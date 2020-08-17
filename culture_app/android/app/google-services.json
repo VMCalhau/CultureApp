@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "173295518532",
+    "firebase_url": "https://appacessocultura.firebaseio.com",
+    "project_id": "appacessocultura",
+    "storage_bucket": "appacessocultura.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173295518532:android:5eecca15c48e167d564d11",
+        "android_client_info": {
+          "package_name": "br.unicamp.culture_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173295518532-q91ct4hvt5563agtb6trqn8ligp94jqr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.unicamp.culture_app",
+            "certificate_hash": "364f75c6be05b0d73a017984b242a67cf617fd3b"
+          }
+        },
+        {
+          "client_id": "173295518532-rc4ugqrve25vjgmfm0dr3cgr8p755h2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5KKt9qtVfyEKrxd_T1T3Y8SXHlp-MV8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173295518532-rc4ugqrve25vjgmfm0dr3cgr8p755h2j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
