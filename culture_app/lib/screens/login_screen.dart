@@ -1,3 +1,4 @@
+import 'package:culture_app/screens/register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -98,6 +99,32 @@ class LoginScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16.0)
                       ),
+                    ),
+                  ),
+                  SizedBox(height: 32.0,),
+                  Divider(color:  Colors.black,),
+                  SizedBox(height: 32.0,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text(
+                          'Não tem uma conta? ',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterScreen()));
+                          },
+                          child: Text(
+                            'Cadastre - se',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline, color: Colors.blue, fontSize: 16
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   )
                 ],
