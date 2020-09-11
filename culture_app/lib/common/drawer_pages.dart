@@ -17,8 +17,8 @@ class DrawerPages extends StatelessWidget {
         return Column(
           children: <Widget>[
             IconPages(
-              label: "Inicio",
-              iconData: Icons.home,
+              label: "Eventos",
+              iconData: Icons.bookmark,
               onTap: (){
                 _setPage(0);
               },

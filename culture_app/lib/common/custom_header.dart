@@ -17,9 +17,8 @@ class CustomHeader extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color.fromARGB(255, 27, 94, 32),
-                const Color.fromARGB(255, 255, 235, 59),
-                const Color.fromARGB(255, 40, 53, 147),
+                Colors.deepOrange,
+                Colors.orangeAccent
               ]),
         ),
         child: Row(

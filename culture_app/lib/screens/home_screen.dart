@@ -10,7 +10,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Inicio"),
+        title: Text("Eventos"),
+        centerTitle: true,
       ),
       drawer: CustomDrawer(),
     );
