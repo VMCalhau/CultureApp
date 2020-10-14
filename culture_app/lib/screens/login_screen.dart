@@ -1,5 +1,7 @@
 import 'package:culture_app/models/user_model.dart';
+import 'package:culture_app/screens/account_register_screen.dart';
 import 'package:culture_app/screens/register_screen.dart';
+import 'package:culture_app/screens/stepper_register_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';

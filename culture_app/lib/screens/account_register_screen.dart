@@ -6,23 +6,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class RegisterScreen extends StatefulWidget {
+import 'data_register_screen.dart';
+
+class AccountRegisterScreen extends StatefulWidget {
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _AccountRegisterScreenState createState() => _AccountRegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _AccountRegisterScreenState extends State<AccountRegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
+  final _senha2Controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: ScopedModelDescendant<UserModel>(
-          builder: (context, child, model){
-            if(model.isLoading)
+          builder: (context, child, model) {
+            if (model.isLoading)
               return Center(child: CircularProgressIndicator(),);
             return Container(
                 decoration: BoxDecoration(
@@ -44,7 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         padding: EdgeInsets.all(32.0),
                         children: <Widget>[
                           Center(
-                            child: Text("Cadastrar",
+                            child: Text("Conta",
                               style: TextStyle(
                                   fontSize: 24.0,
                                   fontWeight: FontWeight.bold
@@ -56,7 +59,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             decoration: InputDecoration(
                                 hintText: "Nome"),
                             validator: (text) {
-                              if (text.isEmpty || text.length < 6) return "Nome inválido";
+                              if (text.isEmpty)
+                                return "Nome inválido";
                             },
                           ),
                           SizedBox(height: 16.0,),
@@ -76,8 +80,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 hintText: "Senha"),
                             keyboardType: TextInputType.multiline,
                             validator: (text) {
-                              if (text.isEmpty) return "Senha inválida";
-                              else if (text.length < 8) return "Senha muito curta (min 8 caracteres)";
+                              if (text.isEmpty)
+                                return "Senha inválida";
+                              else if (text.length < 8)
+                                return "Senha muito curta (min 8 caracteres)";
+                              else if (text != _senha2Controller.text) return "Senhas precisam ser iguais";
+                            },
+                          ),
+                          SizedBox(height: 16.0,),
+                          TextFormField(
+                            controller: _senha2Controller,
+                            decoration: InputDecoration(
+                                hintText: "Repetir senha"),
+                            keyboardType: TextInputType.multiline,
+                            validator: (text) {
+                              if (text.isEmpty)
+                                return "Senha inválida";
+                              else if (text.length < 8)
+                                return "Senha muito curta (min 8 caracteres)";
+                              else if (text != _senhaController.text) return "Senhas precisam ser iguais";
                             },
                           ),
 
@@ -85,21 +106,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           SizedBox(
                             height: 48,
                             child: RaisedButton(
-                              child: Text("Cadastrar",
+                              child: Text("Continuar",
                                 style: TextStyle(fontSize: 18.0),
                               ),
                               textColor: Colors.white,
                               color: Colors.black,
-                              onPressed: (){
+                              onPressed: () {
                                 if (_formKey.currentState.validate()) {
                                   Map<String, dynamic> userData = {
                                     "name": _nameController.text,
                                     "email": _emailController.text,
                                   };
-                                  model.signUp(userData: userData, senha: _senhaController.text, onSuccess: _onSuccess, onFail: _onFail);
-                                  Future.delayed(Duration(seconds: 2)).then((_){
-                                    Navigator.of(context).pop();
-                                    Navigator.of(context).pop();
+                                  model.signUp(userData: userData,
+                                      senha: _senhaController.text,
+                                      onSuccess: _onSuccess,
+                                      onFail: _onFail);
+                                  Future.delayed(Duration(seconds: 2)).then((
+                                      _) {
+                                    //Navigator.of(context).pop();
+                                    //Navigator.of(context).pop();
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DataRegisterScreen()));
                                   });
                                 }
                               },
@@ -120,13 +146,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                                 GestureDetector(
-                                  onTap: (){
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) =>
+                                            LoginScreen()));
                                   },
                                   child: Text(
                                     'Entrar',
                                     style: TextStyle(
-                                        decoration: TextDecoration.underline, color: Colors.blue, fontSize: 16
+                                        decoration: TextDecoration.underline,
+                                        color: Colors.blueAccent,
+                                        fontSize: 16
                                     ),
                                   ),
                                 )
@@ -141,6 +171,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         )
     );
   }
+
   void _onSuccess(){
     /*Scaffold.of(context).showSnackBar(
       SnackBar(content: Text("Usuário criado"), backgroundColor: Theme.of(context).primaryColor, duration: Duration(seconds: 2),)
@@ -154,4 +185,5 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SnackBar(content: Text("Falha ao criar suário"), backgroundColor: Colors.red, duration: Duration(seconds: 2),)
     );*/
   }
+
 }

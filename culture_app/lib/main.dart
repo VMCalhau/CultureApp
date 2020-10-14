@@ -1,5 +1,6 @@
 import 'package:culture_app/blocs/drawer_bloc.dart';
 import 'package:culture_app/models/user_model.dart';
+import 'package:culture_app/screens/account_register_screen.dart';
 import 'package:culture_app/screens/home_screen.dart';
 import 'package:culture_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
