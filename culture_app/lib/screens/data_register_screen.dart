@@ -1,4 +1,6 @@
 import 'package:culture_app/models/user_model.dart';
+import 'package:culture_app/screens/preferences_register_screen.dart';
+import 'package:culture_app/services/via_cep_service.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -14,6 +16,9 @@ class _DataRegisterScreenState extends State<DataRegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _idadeController = TextEditingController();
   final _enderecoController = TextEditingController();
+  final _ruaController = TextEditingController();
+  final _bairroController = TextEditingController();
+  final _cidadeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +67,38 @@ class _DataRegisterScreenState extends State<DataRegisterScreen> {
                           TextFormField(
                             controller: _enderecoController,
                             decoration: InputDecoration(
-                                hintText: "CEP (Somente dígitos)"),
+                                hintText: "CEP (Somente dígitos)",
+                                suffixIcon: IconButton(
+                                  onPressed: _consultaCep,
+                                  icon: Icon(Icons.arrow_forward),
+                                )),
                             keyboardType: TextInputType.number,
                             maxLength: 8,
                             validator: (text) {
+                              if (text.length != 8) return "CEP inválido";
+                              else if (_ruaController.text == "") return "Valide o CEP";
                             },
+                          ),
+                          SizedBox(height: 16.0,),
+                          TextFormField(
+                            controller: _ruaController,
+                            decoration: InputDecoration(
+                                hintText: "Rua"),
+                            enabled: false,
+                          ),
+                          SizedBox(height: 16.0,),
+                          TextFormField(
+                            controller: _bairroController,
+                            decoration: InputDecoration(
+                                hintText: "Bairro"),
+                            enabled: false,
+                          ),
+                          SizedBox(height: 16.0,),
+                          TextFormField(
+                            controller: _cidadeController,
+                            decoration: InputDecoration(
+                                hintText: "Cidade"),
+                            enabled: false,
                           ),
                           SizedBox(height: 32.0,),
                           SizedBox(
@@ -81,13 +113,13 @@ class _DataRegisterScreenState extends State<DataRegisterScreen> {
                                 if (_formKey.currentState.validate()) {
                                   Map<String, dynamic> userData = {
                                     "idade": _idadeController.text,
-                                    //"email": _emailController.text,
+                                    "cep": _enderecoController.text,
                                   };
                                   Future.delayed(Duration(seconds: 2)).then((
                                       _) {
                                     //Navigator.of(context).pop();
                                     //Navigator.of(context).pop();
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => DataRegisterScreen()));
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => PreferencesRegisterScreen()));
                                   });
                                 }
                               },
@@ -133,6 +165,17 @@ class _DataRegisterScreenState extends State<DataRegisterScreen> {
         )
     );
   }
+
+  Future _consultaCep () async {
+      final cep = _enderecoController.text;
+      final resultCep = await ViaCepService.fetchCep(cep: cep);
+
+      _ruaController.text = resultCep.logradouro;
+      _bairroController.text = resultCep.bairro;
+      _cidadeController.text = resultCep.localidade;
+  }
+
+
   void _onSuccess(){
     /*Scaffold.of(context).showSnackBar(
       SnackBar(content: Text("Usuário criado"), backgroundColor: Theme.of(context).primaryColor, duration: Duration(seconds: 2),)

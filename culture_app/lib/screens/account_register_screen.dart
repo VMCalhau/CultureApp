@@ -93,12 +93,7 @@ class _AccountRegisterScreenState extends State<AccountRegisterScreen> {
                             decoration: InputDecoration(
                                 hintText: "Repetir senha"),
                             keyboardType: TextInputType.multiline,
-                            validator: (text) {
-                              if (text.isEmpty)
-                                return "Senha inválida";
-                              else if (text.length < 8)
-                                return "Senha muito curta (min 8 caracteres)";
-                              else if (text != _senhaController.text) return "Senhas precisam ser iguais";
+                            validator: (text) {if (text != _senhaController.text) return "Senhas precisam ser iguais";
                             },
                           ),
 
