@@ -4,6 +4,7 @@ import 'package:culture_app/screens/account_register_screen.dart';
 import 'package:culture_app/screens/data_register_screen.dart';
 import 'package:culture_app/screens/home_screen.dart';
 import 'package:culture_app/screens/login_screen.dart';
+import 'package:culture_app/screens/preferences_register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
