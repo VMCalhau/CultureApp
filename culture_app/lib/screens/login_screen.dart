@@ -1,3 +1,4 @@
+import 'package:culture_app/models/User.dart';
 import 'package:culture_app/models/user_model.dart';
 import 'package:culture_app/screens/account_register_screen.dart';
 import 'package:culture_app/screens/register_screen.dart';
@@ -12,6 +13,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = new User(null, null, null, null, null, null);
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: ScopedModelDescendant<UserModel>(
@@ -125,7 +128,7 @@ class LoginScreen extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: (){
-                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountRegisterScreen()));
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountRegisterScreen(user: user,)));
                                 },
                                 child: Text(
                                   'Cadastre - se',

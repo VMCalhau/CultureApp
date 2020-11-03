@@ -1,3 +1,4 @@
+import 'package:culture_app/models/User.dart';
 import 'package:culture_app/models/user_model.dart';
 import 'package:culture_app/screens/preferences_register_screen.dart';
 import 'package:culture_app/services/via_cep_service.dart';
@@ -7,12 +8,13 @@ import 'package:scoped_model/scoped_model.dart';
 import 'login_screen.dart';
 
 
-class DataRegisterScreen extends StatefulWidget {
-  @override
-  _DataRegisterScreenState createState() => _DataRegisterScreenState();
-}
+class DataRegisterScreen extends StatelessWidget {
+  final User user;
+  DataRegisterScreen({Key key, @required this.user}) : super(key: key);
 
-class _DataRegisterScreenState extends State<DataRegisterScreen> {
+  /*@override
+  _DataRegisterScreenState createState() => _DataRegisterScreenState();*/
+
   final _formKey = GlobalKey<FormState>();
   final _idadeController = TextEditingController();
   final _enderecoController = TextEditingController();
@@ -23,11 +25,7 @@ class _DataRegisterScreenState extends State<DataRegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ScopedModelDescendant<UserModel>(
-          builder: (context, child, model) {
-            if (model.isLoading)
-              return Center(child: CircularProgressIndicator(),);
-            return Container(
+        body: Container(
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                         begin: Alignment.topLeft,
@@ -111,6 +109,17 @@ class _DataRegisterScreenState extends State<DataRegisterScreen> {
                               color: Colors.black,
                               onPressed: () {
                                 if (_formKey.currentState.validate()) {
+                                  user.idade = int.parse(_idadeController.text);
+                                  user.cep = _enderecoController.text;
+
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          PreferencesRegisterScreen(user: user)));
+
+                                }
+
+
+                                /*if (_formKey.currentState.validate()) {
                                   Map<String, dynamic> userData = {
                                     "idade": _idadeController.text,
                                     "cep": _enderecoController.text,
@@ -121,7 +130,7 @@ class _DataRegisterScreenState extends State<DataRegisterScreen> {
                                     //Navigator.of(context).pop();
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => PreferencesRegisterScreen()));
                                   });
-                                }
+                                }*/
                               },
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
@@ -160,33 +169,24 @@ class _DataRegisterScreenState extends State<DataRegisterScreen> {
                         ],
                       ),
                     )
-                ));
-          },
-        )
+                ))
     );
   }
 
   Future _consultaCep () async {
-      final cep = _enderecoController.text;
-      final resultCep = await ViaCepService.fetchCep(cep: cep);
+    final cep = _enderecoController.text;
+    final resultCep = await ViaCepService.fetchCep(cep: cep);
 
-      _ruaController.text = resultCep.logradouro;
-      _bairroController.text = resultCep.bairro;
-      _cidadeController.text = resultCep.localidade;
+    _ruaController.text = resultCep.logradouro;
+    _bairroController.text = resultCep.bairro;
+    _cidadeController.text = resultCep.localidade;
   }
 
-
-  void _onSuccess(){
-    /*Scaffold.of(context).showSnackBar(
-      SnackBar(content: Text("Usuário criado"), backgroundColor: Theme.of(context).primaryColor, duration: Duration(seconds: 2),)
-    );
-    Future.delayed(Duration(seconds: 2)).then((_){
-      Navigator.of(context).pop();
-    });*/
-  }
-  void _onFail(){
-    /*Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text("Falha ao criar suário"), backgroundColor: Colors.red, duration: Duration(seconds: 2),)
-    );*/
-  }
 }
+
+/*class _DataRegisterScreenState extends State<DataRegisterScreen> {
+  final User user;
+  _DataRegisterScreenState({Key key, @required this.user});
+
+
+}*/

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:scoped_model/scoped_model.dart';
+
 class UserModel extends Model{
 
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -33,17 +34,21 @@ class UserModel extends Model{
     isLoading = true;
     notifyListeners();
   }
+
   void recoverPass(){
 
   }
+
   bool isLogged(){
     return firebaseUser !=  null;
   }
+
   Future<Null> _saveUserData (Map<String, dynamic> userData) async
   {
     this.userData = userData;
     await Firestore.instance.collection("users").document(firebaseUser.uid).setData(userData);
   }
+  
   void signOut() async {
     await _auth.signOut();
     userData = Map();
