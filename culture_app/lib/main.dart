@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culture_app/blocs/drawer_bloc.dart';
 import 'package:culture_app/models/user_model.dart';
 import 'package:culture_app/screens/account_register_screen.dart';
@@ -10,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 void main() {
+
   runApp(MyApp());
 }
 

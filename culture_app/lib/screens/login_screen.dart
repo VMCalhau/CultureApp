@@ -8,12 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import 'home_screen.dart';
+
 class LoginScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final user = new User(null, null, null, null, null, null);
+
+    final _emailController = TextEditingController();
+    final _senhaController = TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -49,6 +54,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 16.0,),
                         TextFormField(
+                          controller: _emailController,
                           decoration: InputDecoration(
                               hintText: "Email"),
                           keyboardType: TextInputType.emailAddress,
@@ -58,6 +64,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 16.0,),
                         TextFormField(
+                          controller: _senhaController,
                           decoration: InputDecoration(
                               hintText: "Senha"),
                           validator: (text) {
@@ -88,9 +95,16 @@ class LoginScreen extends StatelessWidget {
                             color: Colors.black,
                             onPressed: (){
                               if (_formKey.currentState.validate()) {
-
+                                model.signIn(
+                                    email: _emailController.text,
+                                    senha: _senhaController.text,
+                                    onSuccess: _onSuccess, onFail: _onFail);
                               }
-                              model.signIn();
+
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (context) =>
+                                      HomeScreen()));
+
                             },
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
@@ -151,4 +165,12 @@ class LoginScreen extends StatelessWidget {
 
     );
   }
+
+  void _onSuccess(){
+    print("sucess");
+  }
+  void _onFail(){
+    print("failed");
+  }
+
 }

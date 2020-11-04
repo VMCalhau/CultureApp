@@ -37,7 +37,7 @@ class CustomHeader extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               !model.isLogged() ?
-                              "Acesse sua conta!" : "Olá, " + model.userData["name"],
+                              "Acesse sua conta!" : "Olá, " + model.userData["nome"],
                               style: TextStyle(
                                   color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
                               overflow: TextOverflow.clip,

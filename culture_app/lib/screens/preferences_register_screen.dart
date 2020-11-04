@@ -1,5 +1,6 @@
 import 'package:culture_app/models/User.dart';
 import 'package:culture_app/models/user_model.dart';
+import 'package:culture_app/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -123,6 +124,10 @@ class _PreferencesRegisterScreenState extends State<PreferencesRegisterScreen> {
                                     onSuccess: _onSuccess,
                                     onFail: _onFail
                                 );
+
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) =>
+                                        HomeScreen()));
                               }
                             },
                             shape: RoundedRectangleBorder(
@@ -170,17 +175,10 @@ class _PreferencesRegisterScreenState extends State<PreferencesRegisterScreen> {
   }
 
   void _onSuccess(){
-    /*Scaffold.of(context).showSnackBar(
-      SnackBar(content: Text("Usuário criado"), backgroundColor: Theme.of(context).primaryColor, duration: Duration(seconds: 2),)
-    );
-    Future.delayed(Duration(seconds: 2)).then((_){
-      Navigator.of(context).pop();
-    });*/
+    print("success");
   }
   void _onFail(){
-    /*Scaffold.of(context).showSnackBar(
-        SnackBar(content: Text("Falha ao criar suário"), backgroundColor: Colors.red, duration: Duration(seconds: 2),)
-    );*/
+    print("failed");
   }
 
 }
