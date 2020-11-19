@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:culture_app/common/custom_drawer.dart';
+import 'package:culture_app/models/Location.dart';
 import 'package:culture_app/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -12,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  Future<Map> getKeywords() async {
+  Future<Location> _getKeywords() async {
     http.Response response;
 
     response = await http.post(
@@ -22,13 +23,25 @@ class _HomeScreenState extends State<HomeScreen> {
         'Accept-encoding':'gzip'
       },
       body: <String, String> {
-        'text':'O Museu de Ciencia em Campinas vai promover um evento...',
-        'extractors':'topics'
+        'text':'Neste mês de outubro, quando se comemora o Dia das Crianças, o Museu Catavento traz a mostra gratuita de experiências científicas ao Parque D. Pedro Shopping, em Campinas. A exposição começou dia 3 e vai …',
+        'extractors':'entities'
       },
     );
     if (response.statusCode != 200)
       print('error: ' + response.statusCode.toString());
-    print(response.body);
+    else {
+      return Location.fromJson(jsonDecode(response.body));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getKeywords().then((value) {
+      if (value != null) {
+        print(value.localizacao);
+      }
+    });
   }
 
   @override
@@ -42,12 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
         if (model.isLoading)
           return  Center(child: CircularProgressIndicator(),);
-        return Container(color: Colors.green,
-        child: Center(
-          child: RaisedButton(
-            onPressed: getKeywords,
-          ),
-        ),);
+        return Container(color: Colors.green);
       }),
     );
   }
