@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _getKeywords().then((value) {
       if (value != null) {
-        print(value.localizacao);
+        print(value);
       }
     });
   }

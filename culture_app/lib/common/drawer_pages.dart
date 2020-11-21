@@ -1,5 +1,6 @@
 import 'package:culture_app/blocs/drawer_bloc.dart';
 import 'package:culture_app/common/icon_pages.dart';
+import 'package:culture_app/screens/update_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 class DrawerPages extends StatelessWidget {
@@ -37,7 +38,7 @@ class DrawerPages extends StatelessWidget {
               label: "Editar Perfil",
               iconData: Icons.edit,
               onTap: (){
-                _setPage(2);
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProfile()));
               },
               highlighted: snapshot.data == 2,
             )

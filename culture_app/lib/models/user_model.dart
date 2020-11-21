@@ -59,6 +59,27 @@ class UserModel extends Model{
 
   }
 
+  void update({@required Map<String, dynamic> userData, @required String senha, @required VoidCallback onSuccess, @required VoidCallback onFail}){
+    isLoading = true;
+    notifyListeners();
+    _auth.createUserWithEmailAndPassword(
+      email: userData["email"],
+      password: senha,
+    ).then((user) async {
+      firebaseUser = user.user;
+      await _saveUserData(userData);
+      onSuccess();
+      isLoading = false;
+      notifyListeners();
+
+    }).catchError((e){
+      print(e);
+      onFail();
+      isLoading = false;
+      notifyListeners();
+    });
+  }
+
   void recoverPass(){
 
   }
