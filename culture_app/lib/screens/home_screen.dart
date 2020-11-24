@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culture_app/common/custom_drawer.dart';
 import 'package:culture_app/models/Event.dart';
 import 'package:culture_app/models/Location.dart';
 import 'package:culture_app/models/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:scoped_model/scoped_model.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -37,15 +38,15 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  @override
+  /*@override
   void initState() {
     super.initState();
     _getKeywords().then((value) {
       if (value != null) {
-        print(value);
+        print(value.localizacao);
       }
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -58,25 +59,27 @@ class _HomeScreenState extends State<HomeScreen> {
       body: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
         if (model.isLoading)
           return  Center(child: CircularProgressIndicator(),);
-        if (!model.isLogged())
+        else if (!model.isLogged())
           return Container(child: Center(child: Text("Cadastre-se ou Entre para visualizar eventos"),),);
         else {
-          _getEvents(model.firebaseUser.uid);
-          return ListView.builder(
+            _getEvents(model.firebaseUser.uid);
+          /*return ListView.builder(
             padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
             itemCount: 10,
             itemBuilder: null,
+          );*/
 
-          );
+          return Container();
         }
       }),
     );
   }
 
-  Future<Event> _getEvents(userUid) {
-    Firestore.instance.collection("users").document(userUid).get().then((value) {
-      List<String> preferencias = value['preferencias'];
-    });
+  void _getEvents(userUid) async {
+
+    DocumentSnapshot doc = await Firestore.instance.collection("users").document(userUid).get();
+    print(doc.data['preferencias']);
+
   }
 
 }
