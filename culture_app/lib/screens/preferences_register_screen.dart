@@ -33,9 +33,14 @@ class _PreferencesRegisterScreenState extends State<PreferencesRegisterScreen> {
 
   @override
   void initState() {
-    addList("Rock");
-    addList("Museus");
+    addList("Cinema");
+    addList("Crianças");
     addList("Esportes");
+    addList("Games/Geek");
+    addList("Gastronomia");
+    addList("Museus");
+    addList("Música");
+    addList("Turismo");
     super.initState();
   }
 
