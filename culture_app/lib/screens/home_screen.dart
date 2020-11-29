@@ -5,12 +5,13 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culture_app/common/custom_drawer.dart';
 import 'package:culture_app/models/Event.dart';
-import 'package:culture_app/models/Location.dart';
 import 'package:culture_app/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/scheduler.dart';
+
+import 'event_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -18,28 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<Location> _getKeywords() async {
-    http.Response response;
-
-    response = await http.post(
-      'https://api.textrazor.com/',
-      headers: <String, String>{
-        'x-textrazor-key':
-            '276d983152cd9c7833f826402ac07459a2aea3d64ff1b1b08db75c80',
-        'Accept-encoding': 'gzip'
-      },
-      body: <String, String>{
-        'text':
-            'Neste mês de outubro, quando se comemora o Dia das Crianças, o Museu Catavento traz a mostra gratuita de experiências científicas ao Parque D. Pedro Shopping, em Campinas. A exposição começou dia 3 e vai …',
-        'extractors': 'entities'
-      },
-    );
-    if (response.statusCode != 200)
-      print('error: ' + response.statusCode.toString());
-    else {
-      return Location.fromJson(jsonDecode(response.body));
-    }
-  }
 
   List<dynamic> preferencias = [];
 
@@ -47,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int start = 1;
   ScrollController _scrollController = new ScrollController();
-
 
   void acessoAPI(context) {
     Future.delayed(Duration(seconds: 3), (){
@@ -67,19 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
       SchedulerBinding.instance.addPostFrameCallback((_) => acessoAPI(context));
     }
   }
-
-
-  /*@override
-  void initState() {
-    super.initState();
-    _getKeywords().then((value) {
-      if (value != null) {
-        print(value.localizacao);
-      }
-    });
-  }*/
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
       itemCount: eventos.length+1,
       itemBuilder: (context, index) {
         if (index < eventos.length) {
-          return GestureDetector(
+          return InkWell(
             child: Container(
               height: 132.0,
               decoration: BoxDecoration(
@@ -158,13 +123,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) =>
+                      EventScreen(evento: eventos[index],)));
+            },
           );
         }
         else {
           return Column(
             children: <Widget>[
-              GestureDetector(
+              InkWell(
                 child: Container(
                   height: 64.0,
                   decoration: BoxDecoration(
@@ -182,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   if (start < 80) {
                     start += 10;
-                    _scrollController.animateTo(0.0, duration: Duration(milliseconds: 10), curve: Curves.easeIn);
+                    _scrollController.animateTo(0.0, duration: Duration(milliseconds: 500), curve: Curves.easeOut);
                     _getEvents(preferencias).then((value) {
                       setState(() {
                         _widget = _buildList(value);
@@ -236,11 +205,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
     return SizedBox.shrink();
-  }
-
-  Future<List<dynamic>> _getPreferences(userUid) async {
-    DocumentSnapshot doc = await Firestore.instance.collection("users").document(userUid).get();
-    return doc.data['preferencias'];
   }
 
   Future<List<Event>> _getEvents(List<dynamic> value) async {
