@@ -65,6 +65,9 @@ class LoginScreen extends StatelessWidget {
                         SizedBox(height: 16.0,),
                         TextFormField(
                           controller: _senhaController,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          obscureText: true,
                           decoration: InputDecoration(
                               hintText: "Senha"),
                           validator: (text) {
@@ -111,7 +114,7 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 32.0,),
+                        /*SizedBox(height: 32.0,),
                         Center(
                           child: Text("- OU -",
                             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),),
@@ -127,7 +130,7 @@ class LoginScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(16.0)
                             ),
                           ),
-                        ),
+                        ),*/
                         SizedBox(height: 32.0,),
                         Divider(color:  Colors.black,),
                         SizedBox(height: 32.0,),
