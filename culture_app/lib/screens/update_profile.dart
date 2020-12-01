@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class UpdateProfileScreen extends StatefulWidget {
+import 'home_screen.dart';
+
+class EditProfile extends StatefulWidget {
   @override
   _UpdateProfileScreenState createState() => _UpdateProfileScreenState();
 }
@@ -28,68 +30,54 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    final _ruaController = TextEditingController();
-    final _bairroController = TextEditingController();
-    final _cidadeController = TextEditingController();
     final _emailController = TextEditingController();
-    final _enderecoController = TextEditingController();
     final _preferenciasController = TextEditingController();
 
-
-
     return ScopedModelDescendant<UserModel>(
-      builder: (context, child, model){
-        Future _consultaCep () async {
-          final cep = _enderecoController.text;
-          final resultCep = await ViaCepService.fetchCep(cep: cep);
-          print(cep);
-          _ruaController.text = resultCep.logradouro;
-          _bairroController.text = resultCep.bairro;
-          _cidadeController.text = resultCep.localidade;
-        }
-        return Scaffold(
-          backgroundColor: Color(0xffF8F8FA),
-          body: SingleChildScrollView(
-            child: Stack(
-              overflow: Overflow.visible,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.blue.shade500,
-                          Colors.blue
-                        ]),
-                  ),
-                  height: 200,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 50, right: 30, top: 30),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            SizedBox(width: 50,),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text("Meu Perfil", style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold
-                                ),),
-                                /*SizedBox(height: 10,),
-                                Text("Perfil", style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold
-                                ),),*/
-                              ],
-                            )
-                          ],
-                        )
-                      ],
+        builder: (context, child, model){
+          return Scaffold(
+            backgroundColor: Color(0xffF8F8FA),
+            body:  Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Colors.blue.shade500,
+                            Colors.blue
+                          ]),
+                    ),
+                    height: 200,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 50, right: 30, top: 30),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              SizedBox(width: 50,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text("Meu", style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 32,
+                                      fontWeight: FontWeight.bold
+                                  ),),
+                                  SizedBox(height: 10,),
+                                  Text("Perfil", style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold
+                                  ),),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -119,66 +107,24 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           )
                         ]
                     ),
-                    child: Stack(
-                      overflow: Overflow.visible,
+                  ),
+                  SizedBox(height: 50,),
+                  Padding(
+                    padding: EdgeInsets.only(top: 300, left: 50),
+                    child: Row(
                       children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(left: 110),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                height: 56,
-                                width: 56,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage("imagens/person.png")
-                                    )
-                                ),
-                              ),
-                              Text(model.userData["nome"].toString(), style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
-                              Text(model.userData["idade"].toString() + " anos" , style: _myStyle2(),)
-                            ],
-                          ),
-                        )
+                        Icon(Icons.email),
+                        SizedBox(width: 10,),
+                        Text("E-mail", style: _myStyle2(),)
                       ],
                     ),
                   ),
-                ),
-                SizedBox(height: 20,),
-                Padding(
-                  padding: EdgeInsets.only(top: 300, left: 50),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(Icons.home),
-                      SizedBox(width: 10,),
-                      Text("Endereço", style: _myStyle2(),),
-                      SizedBox(width: 70,),
-                      GestureDetector(
-                        child: Row(
-                          children: <Widget>[
-                            Icon(Icons.search),
-                            SizedBox(width: 10,),
-                            Text("Pesquisar", style: _myStyle2(),)
-                          ],
-                        ),
-                        onTap: (){
-                          if(_enderecoController.text == "")
-                            "Digite o seu CEP corretamente";
-                          else
-                            _consultaCep();
-                        },
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 330, left: 30),
-                  child: Container(
-                      width: 350,
-                      height: 200,
+                  SizedBox(height: 20,),
+                  Padding(
+                    padding: EdgeInsets.only(top: 330, left: 50),
+                    child: Container(
+                      width: 300,
+                      height: 50,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -267,62 +213,65 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 650, left: 50),
-                  child: Row(
-                    children: <Widget>[
-                      Icon(Icons.bookmark),
-                      SizedBox(width: 10,),
-                      Text("Preferenências", style: _myStyle2(),)
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20,),
-                Padding(
-                  padding: EdgeInsets.only(top: 680, left: 50),
-                  child: Container(
-                    width: 300,
-                    height: 180,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.red,
-                            blurRadius: 10,
-                            offset: Offset(0,0),
-                          )
-                        ]
-                    ),
-                    child: TextFormField(
-                      focusNode: myFocus,
-                      controller: _preferenciasController,
-                      decoration: InputDecoration(labelText: model.userData["preferencias"].toString()),
-                      enabled: false,
+                  Padding(
+                    padding: EdgeInsets.only(top: 410, left: 50),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.bookmark),
+                        SizedBox(width: 10,),
+                        Text("Preferenências", style: _myStyle2(),)
+                      ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 900, left: 340),
-                  child: FlatButton(
-                    shape: CircleBorder(),
-                    color: Colors.blue,
-                    child: InkWell(
-                      splashColor: Colors.red,
-                      child: SizedBox(width: 56, height: 56, child: Icon(Icons.edit),),
+                  SizedBox(height: 20,),
+                  Padding(
+                    padding: EdgeInsets.only(top: 440, left: 50),
+                    child: Container(
+                      width: 300,
+                      height: 180,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.red,
+                              blurRadius: 10,
+                              offset: Offset(0,0),
+                            )
+                          ]
+                      ),
+                      child: TextFormField(
+                        focusNode: myFocus,
+                        controller: _preferenciasController,
+                        decoration: InputDecoration(labelText: model.userData["preferencias"].toString()),
+                        enabled: false,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 620, left: 340),
+                    child: FlatButton(
+                      shape: CircleBorder(),
+                      color: Colors.blue,
+                      child: InkWell(
+                          splashColor: Colors.red,
+                          child: SizedBox(width: 56, height: 56, child: Icon(Icons.edit),),
+                        ),
+                      onPressed: (){
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) =>
+                                HomeScreen()));
+                      },
                     ),
                     onPressed: (){
 
                     },
                   ),
-                ),
-                SizedBox(height: 30,)
-              ],
-            ),
-          ),
-        );
-      },
+                  SizedBox(height: 30,)
+                ],
+              ),
+          );
+        },
     );
 
   }
