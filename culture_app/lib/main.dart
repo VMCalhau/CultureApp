@@ -3,6 +3,7 @@ import 'package:culture_app/blocs/drawer_bloc.dart';
 import 'package:culture_app/models/user_model.dart';
 import 'package:culture_app/screens/account_register_screen.dart';
 import 'package:culture_app/screens/data_register_screen.dart';
+import 'package:culture_app/screens/edit_profile.dart';
 import 'package:culture_app/screens/event_screen.dart';
 import 'package:culture_app/screens/home_screen.dart';
 import 'package:culture_app/screens/login_screen.dart';

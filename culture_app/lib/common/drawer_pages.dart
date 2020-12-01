@@ -1,5 +1,8 @@
 import 'package:culture_app/blocs/drawer_bloc.dart';
 import 'package:culture_app/common/icon_pages.dart';
+import 'package:culture_app/screens/edit_profile.dart';
+import 'package:culture_app/screens/favorites_screen.dart';
+import 'package:culture_app/screens/questionnaire.java.dart';
 import 'package:culture_app/screens/update_profile.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -29,18 +32,25 @@ class DrawerPages extends StatelessWidget {
               label: "Favoritos",
               iconData: Icons.favorite,
               onTap: (){
-                _setPage(1);
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => FavoritesScreen()));
               },
               highlighted: snapshot.data == 1,
             ),
-
             IconPages(
               label: "Editar Perfil",
               iconData: Icons.edit,
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProfile()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProfileScreen()));
               },
               highlighted: snapshot.data == 2,
+            ),
+            IconPages(
+              label: "Questionário",
+              iconData: Icons.assignment,
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => Questionnaire()));
+              },
+              highlighted: snapshot.data == 3,
             )
           ],
         );

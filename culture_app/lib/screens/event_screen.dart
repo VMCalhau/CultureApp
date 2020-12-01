@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:culture_app/models/Event.dart';
 import 'package:culture_app/models/MapUtils.dart';
 import 'package:culture_app/models/user_model.dart';
@@ -20,18 +21,17 @@ class _EventScreenState extends State<EventScreen> {
   final Event evento;
   _EventScreenState({Key key, @required this.evento});
 
-  Future<Location> _getKeywords() async {
+  Future<Location> _getKeywords(String text) async {
     http.Response response;
 
     response = await http.post(
       'https://api.textrazor.com/',
       headers: <String, String>{
-        'x-textrazor-key':
-        '276d983152cd9c7833f826402ac07459a2aea3d64ff1b1b08db75c80',
+        'x-textrazor-key':'276d983152cd9c7833f826402ac07459a2aea3d64ff1b1b08db75c80',
         'Accept-encoding': 'gzip'
       },
       body: <String, String>{
-        'text': evento.descricao,
+        'text': text,
         'extractors': 'entities'
       },
     );
@@ -46,18 +46,58 @@ class _EventScreenState extends State<EventScreen> {
   void initState() {
     super.initState();
 
-    _getKeywords().then((value) {
-      if (value != null) {
-        evento.localizacao = value;
+    _getKeywords(evento.descricao).then((value) {
+      if (value == null) {
+        _getKeywords(evento.nome).then((val) {
+          if (val != null) {
+            setState(() {
+              evento.localizacao = val;
+            });
+          }
+        });
+      }
+      else {
+        setState(() {
+          evento.localizacao = value;
+        });
       }
     });
   }
 
+  IconData _heart = Icons.favorite_border;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: ScopedModelDescendant<UserModel>(builder: (context, child, model) {
-          return Container(
+    return ScopedModelDescendant<UserModel> (builder: (context, child, model) {
+      return Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: GestureDetector(
+                  child: Icon(_heart),
+                  onTap: (){
+                    setState(() {
+                      if (_heart == Icons.favorite_border) {
+                        _heart = Icons.favorite;
+                        Firestore.instance.collection("users").document(model.firebaseUser.uid).collection("favorites").document(evento.nome.substring(0,11)).setData({
+                          "nome": evento.nome,
+                          "descricao": evento.descricao,
+                          "url": evento.url,
+                          "imagem": evento.imagem,
+                        });
+                      }
+                      else {
+                        _heart = Icons.favorite_border;
+                        Firestore.instance.collection("users").document(model.firebaseUser.uid).collection("favorites").document(evento.nome.substring(0,11)).delete();
+                      }
+                    });
+                  },
+                ),
+              )
+            ],
+          ),
+          body: Container(
               color: Colors.white,
               child: ListView(
                 children: <Widget>[
@@ -103,19 +143,18 @@ class _EventScreenState extends State<EventScreen> {
                       height: 48.0,
                       color: Color(0xFF2E86C1),
                       textColor: Colors.white,
-                      child: Text("Abrir no Google Maps", style: TextStyle(
-                        fontSize: 15.0,
-                      ),),
-                      onPressed: () {
+                      child: evento.localizacao == null ? null : Text("Abrir no Google Maps", style: TextStyle(fontSize: 15.0,),),
+                      onPressed: evento.localizacao == null ? null : () {
                         MapUtils.openMap(model.userData["cep"], evento.localizacao.localizacao);
                       },
                     ),
-                  )
+                  ),
+                  SizedBox(height: 24.0,),
                 ],
               )
-          );
-        })
-    );
+          )
+      );
+    },);
   }
 
   _launchUrl() async {

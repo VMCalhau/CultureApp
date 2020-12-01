@@ -12,6 +12,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'event_screen.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   List<dynamic> preferencias = [];
+  List<Event> allEvents = [];
 
   Widget _widget = Center(child: CircularProgressIndicator(),);
 
@@ -60,9 +62,25 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CircularProgressIndicator(),
           );
         else if (!model.isLogged())
-          return Container(
-            child: Center(
-              child: Text("Cadastre-se ou Entre para visualizar eventos"),
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text("Cadastre-se ou Entre para visualizar eventos"),
+                SizedBox(height: 48.0,),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 48.0),
+                  child: MaterialButton(
+                    height: 48.0,
+                    color: Color(0xFF2E86C1),
+                    textColor: Colors.white,
+                    child: Text("Entrar", style: TextStyle(fontSize: 15.0,),),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen()));
+                    },
+                  ),
+                ),
+              ],
             ),
           );
         else {
@@ -131,37 +149,35 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
         else {
-          return Column(
-            children: <Widget>[
-              InkWell(
-                child: Container(
-                  height: 64.0,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF3498DB),
-                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                  ),
-                  child: Center(
-                    child: Text("Carregar mais",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 32.0,
-                      ),),
-                  ),
-                ),
-                onTap: () {
-                  if (start < 80) {
-                    start += 10;
-                    _scrollController.animateTo(0.0, duration: Duration(milliseconds: 500), curve: Curves.easeOut);
-                    _getEvents(preferencias).then((value) {
-                      setState(() {
-                        _widget = _buildList(value);
-                      });
-                    });
-                  }
-                },
+          return InkWell(
+            child: Container(
+              height: 64.0,
+              decoration: BoxDecoration(
+                color: Color(0xFF3498DB),
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
               ),
-              _begin(),
-            ],
+              child: Center(
+                child: Text("Carregar mais",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32.0,
+                  ),),
+              ),
+            ),
+            onTap: start < 80 ? () {
+                start += 10;
+                /*_scrollController.animateTo(0.0, duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+                _getEvents(preferencias).then((value) {
+                  setState(() {
+                    _widget = _buildList(value);
+                  });
+                });*/
+                _getEvents(preferencias).then((value) {
+                  setState(() {
+                    _widget = _buildList(value);
+                  });
+                });
+            } : null,
           );
         }
       },
@@ -171,48 +187,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _begin() {
-    if (start > 1) {
-      return Column(
-        children: <Widget>[
-          SizedBox(height: 16.0,),
-          InkWell(
-            child: Container(
-              height: 64.0,
-              decoration: BoxDecoration(
-                color: Color(0xFF3498DB),
-                borderRadius: BorderRadius.all(Radius.circular(15.0)),
-              ),
-              child: Center(
-                child: Text("Voltar para o início",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 32.0,
-                  ),),
-              ),
-            ),
-            onTap: (){
-              start = 1;
-              _scrollController.animateTo(0.0, duration: Duration(milliseconds: 10), curve: Curves.easeIn);
-              _getEvents(preferencias).then((value) {
-                setState(() {
-                  _widget = _buildList(value);
-                });
-              });
-            },
-          )
-        ],
-      );
-    }
-    return SizedBox.shrink();
-  }
-
   Future<List<Event>> _getEvents(List<dynamic> value) async {
-    List<Event> allEvents = [];
 
     for (dynamic d in value) {
       log(d.toString());
-      String url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyAtnNh2AekKMAHXWvufJeMcKKjBtqrqIKw&cx=015647702173191900121:rnlapfdp6zo&q=${d.toString()}+campinas&linkSite&start=${start}&sort=date";
+      String url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyAtnNh2AekKMAHXWvufJeMcKKjBtqrqIKw&cx=015647702173191900121:rnlapfdp6zo&q=evento+${d.toString()}+campinas&linkSite&start=${start}&sort=date";
       http.Response response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -240,9 +219,17 @@ class _HomeScreenState extends State<HomeScreen> {
             allEvents.add(eventosUmTipo[i]);
           }
         } else {
+          bool diferente;
           for (int i = 0; i < 3; i++) {
+            diferente = true;
+
             if (eventosUmTipo[i].nome.substring(0, 4) != "https") {
-              allEvents.add(eventosUmTipo[i]);
+              for(int j = 0; j < allEvents.length; j++) {
+                if (eventosUmTipo[i].nome == allEvents[j].nome)
+                  diferente = false;
+              }
+              if (diferente)
+                allEvents.add(eventosUmTipo[i]);
             }
           }
         } // else
